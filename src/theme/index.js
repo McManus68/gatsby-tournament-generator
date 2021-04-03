@@ -8,7 +8,7 @@ const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     background-color: black;
     color: white;
-    font-size: 1rem;
+    font-size: 1rem; 
   }
 `;
 

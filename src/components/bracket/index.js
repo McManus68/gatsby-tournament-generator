@@ -120,27 +120,28 @@ export const StyledRoundMerger = styled.div`
 
 const CurrentRoundContext = React.createContext(null);
 const TotalRoundContext = React.createContext(null);
+const MatchupContext = React.createContext(null);
 
-const MatchupMerger = ({ index }) => {
+const MatchupMerger = () => {
   const round = React.useContext(CurrentRoundContext);
   const roundCount = React.useContext(TotalRoundContext);
+  const matchup = React.useContext(MatchupContext);
 
   return (
     <StyledMatchupMerger
-      odd={index % 2 === 0}
+      odd={matchup % 2 === 0}
       round={round}
       lastRound={round === roundCount - 1}
-    ></StyledMatchupMerger>
+    />
   );
 };
 
 const RoundMerger = () => {
   const round = React.useContext(CurrentRoundContext);
-
-  return <StyledRoundMerger firstRound={round === 0}></StyledRoundMerger>;
+  return <StyledRoundMerger firstRound={round === 0} />;
 };
 
-const Matchup = ({ matchup, index }) => {
+const Matchup = ({ matchup }) => {
   const getTeamName = (team) => {
     if (team.players) {
       return team.players[0].name + ' / ' + team.players[1].name;
@@ -154,20 +155,22 @@ const Matchup = ({ matchup, index }) => {
         <StyledTeam firstTeam={true}>{getTeamName(matchup.team1)}</StyledTeam>
         <StyledTeam firstTeam={false}>{getTeamName(matchup.team2)}</StyledTeam>
       </StyledTeams>
-      <MatchupMerger index={index} />
+      <MatchupMerger />
     </StyledMatchup>
   );
 };
 
-const Round = ({ round, index }) => {
+const Round = ({ round }) => {
   return (
-    <CurrentRoundContext.Provider value={index}>
-      <StyledRound>
-        {round.matchups.map((matchup, i) => {
-          return <Matchup key={i} matchup={matchup} index={i} />;
-        })}
-      </StyledRound>
-    </CurrentRoundContext.Provider>
+    <StyledRound>
+      {round.matchups.map((matchup, i) => {
+        return (
+          <MatchupContext.Provider value={i}>
+            <Matchup key={i} matchup={matchup} />
+          </MatchupContext.Provider>
+        );
+      })}
+    </StyledRound>
   );
 };
 
@@ -176,7 +179,11 @@ const Bracket = ({ bracket }) => {
     <TotalRoundContext.Provider value={bracket.rounds.length}>
       <StyledBracket rounds={bracket.rounds.length}>
         {bracket.rounds.map((round, i) => {
-          return <Round key={i} round={round} index={i} />;
+          return (
+            <CurrentRoundContext.Provider value={i}>
+              <Round key={i} round={round} />
+            </CurrentRoundContext.Provider>
+          );
         })}
       </StyledBracket>
     </TotalRoundContext.Provider>
