@@ -1,6 +1,18 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 
+function computeWidth(props) {
+  return `calc(
+    ( ${props.theme.bracket.gridWidth} - ${props.theme.bracket.teamWidth} ) / 2
+  )`;
+}
+
+function computeHeight(props) {
+  return `calc((${props.theme.bracket.teamHeight} + ${
+    props.theme.bracket.gridGap
+  }) * ${Math.pow(2, props.round)})`;
+}
+
 export const StyledBracket = styled.div`
   display: grid;
   grid-template-columns: repeat(
@@ -39,16 +51,14 @@ export const StyledTeam = styled.div`
   background: ${(props) => props.theme.bracket.bg};
   height: ${(props) => props.theme.bracket.teamHeight};
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-  ${({ team }) =>
-    team === 1 &&
-    css`
-      border-radius: 0.25rem 0.25rem 0 0;
-    `}
-  ${({ team }) =>
-    team === 2 &&
-    css`
-      border-radius: 0 0 0.25rem 0.25rem;
-    `}
+  ${({ firstTeam }) =>
+    firstTeam
+      ? css`
+          border-radius: 0.25rem 0.25rem 0 0;
+        `
+      : css`
+          border-radius: 0 0 0.25rem 0.25rem;
+        `}
   &:nth-child(1) {
     border-bottom: thin solid ${(props) => props.theme.bracket.border};
   }
@@ -63,12 +73,7 @@ export const StyledMatchupMerger = styled.div`
         content: '';
         position: absolute;
         box-sizing: border-box;
-        width: calc(
-          (
-              ${(props) => props.theme.bracket.gridWidth} -
-                ${(props) => props.theme.bracket.teamWidth}
-            ) / 2
-        );
+        width: ${(props) => computeWidth(props)};
         height: 2px;
         background: ${(props) => props.theme.bracket.border};
         top: calc(50% - 1px);
@@ -80,29 +85,17 @@ export const StyledMatchupMerger = styled.div`
         position: absolute;
         box-sizing: border-box;
         width: 2px;
-        height: calc(
-          (
-              ${(props) => props.theme.bracket.teamHeight} +
-                ${(props) => props.theme.bracket.gridGap}
-            ) * ${(props) => Math.pow(2, props.round)}
-        );
+        height: ${(props) => computeHeight(props)};
         background: ${(props) => props.theme.bracket.border};
-        left: calc(
-          (
-              ${(props) => props.theme.bracket.gridWidth} -
-                ${(props) => props.theme.bracket.teamWidth}
-            ) / 2
-        );
+        left: ${(props) => computeWidth(props)};
         ${({ odd }) =>
-          odd &&
-          css`
-            top: calc(50% - 1px);
-          `}
-        ${({ odd }) =>
-          !odd &&
-          css`
-            bottom: calc(50% - 1px);
-          `}
+          odd
+            ? css`
+                top: calc(50% - 1px);
+              `
+            : css`
+                bottom: calc(50% - 1px);
+              `}
       }
     `}
 `;
@@ -116,21 +109,11 @@ export const StyledRoundMerger = styled.div`
         content: '';
         position: absolute;
         box-sizing: border-box;
-        width: calc(
-          (
-              ${(props) => props.theme.bracket.gridWidth} -
-                ${(props) => props.theme.bracket.teamWidth}
-            ) / 2
-        );
+        width: ${(props) => computeWidth(props)};
         height: 2px;
         background: ${(props) => props.theme.bracket.border};
         top: calc(50% - 1px);
-        left: calc(
-          (
-              ${(props) => props.theme.bracket.gridWidth} -
-                ${(props) => props.theme.bracket.teamWidth}
-            ) / 2 * -1
-        );
+        left: calc(${(props) => computeWidth(props)} * -1);
       }
     `}
 `;
@@ -168,21 +151,20 @@ const Matchup = ({ matchup, index }) => {
     <StyledMatchup>
       <RoundMerger />
       <StyledTeams>
-        <StyledTeam team={1}>{getTeamName(matchup.team1)}</StyledTeam>
-        <StyledTeam team={2}>{getTeamName(matchup.team2)}</StyledTeam>
+        <StyledTeam firstTeam={true}>{getTeamName(matchup.team1)}</StyledTeam>
+        <StyledTeam firstTeam={false}>{getTeamName(matchup.team2)}</StyledTeam>
       </StyledTeams>
-      <MatchupMerger index={index}></MatchupMerger>
+      <MatchupMerger index={index} />
     </StyledMatchup>
   );
 };
 
 const Round = ({ round, index }) => {
-  console.log('round.matchups', round.matchups);
   return (
     <CurrentRoundContext.Provider value={index}>
       <StyledRound>
         {round.matchups.map((matchup, i) => {
-          return <Matchup key={i} matchup={matchup} index={i}></Matchup>;
+          return <Matchup key={i} matchup={matchup} index={i} />;
         })}
       </StyledRound>
     </CurrentRoundContext.Provider>
@@ -190,12 +172,11 @@ const Round = ({ round, index }) => {
 };
 
 const Bracket = ({ bracket }) => {
-  console.log('bracket', bracket);
   return (
     <TotalRoundContext.Provider value={bracket.rounds.length}>
       <StyledBracket rounds={bracket.rounds.length}>
         {bracket.rounds.map((round, i) => {
-          return <Round key={i} round={round} index={i}></Round>;
+          return <Round key={i} round={round} index={i} />;
         })}
       </StyledBracket>
     </TotalRoundContext.Provider>

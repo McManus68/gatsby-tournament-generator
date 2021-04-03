@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Theme from '../theme';
-import Bracket from '../components/bracket/bracket';
+import Bracket from '../components/bracket';
 
 import JSONData from '../content/teams_16.json';
 
@@ -45,7 +45,6 @@ const IndexPage = () => {
   return (
     <Theme>
       <Bracket bracket={bracket}></Bracket>
-      <h2>Coucou le hibounus</h2>
     </Theme>
   );
 };
