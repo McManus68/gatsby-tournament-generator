@@ -1,8 +1,10 @@
 import * as React from 'react';
 import Theme from '../theme';
 import Bracket from '../components/bracket';
-
+import 'normalize.css';
 import JSONData from '../content/teams_16.json';
+import Header from '../components/header';
+import Footer from '../components/footer';
 
 console.log(JSONData);
 
@@ -37,14 +39,12 @@ let bracket = generateBracket(JSONData);
 
 console.log('bracket', bracket);
 
-//const rounds = Math.floor(Math.log(teams.length) / Math.log(2));
-
-//console.log('rounds', rounds)
-
 const IndexPage = () => {
   return (
     <Theme>
+      <Header />
       <Bracket bracket={bracket}></Bracket>
+      <Footer />
     </Theme>
   );
 };

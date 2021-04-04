@@ -6,7 +6,7 @@ const GlobalStyles = createGlobalStyle`
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: black;
+    background-color: #35383C;
     color: white;
     font-size: 1rem; 
   }
@@ -20,10 +20,13 @@ const Theme = ({ children }) => {
       winner: '#60c645',
       looser: 'yellow',
       border: '#f0f2f2',
-      gridGap: '1rem',
+      gridGap: '2rem',
       gridWidth: '22rem',
-      teamHeight: '2rem',
+      teamHeight: '2.5rem',
       teamWidth: '16rem',
+    },
+    header: {
+      bg: 'black',
     },
   };
 
