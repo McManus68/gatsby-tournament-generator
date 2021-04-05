@@ -1,9 +1,7 @@
-import React, { useContext, createContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Bracket, Round, Matchup, Teams, Team, MatchupMerger, RoundMerger } from './styles/bracket';
-
-const BracketContext = createContext({});
-const RoundContext = createContext({});
-const MatchupContext = createContext({});
+import ScoreDialog from '../dialog/score';
+import { BracketContext, MatchupContext, RoundContext } from '../../context/context';
 
 Bracket.MatchupMerger = function BracketMatchupMerger() {
   const { bracket } = useContext(BracketContext);
@@ -25,9 +23,27 @@ Bracket.RoundMerger = function BracketRoundMerger() {
 };
 
 Bracket.Matchup = function BracketMatchup({ matchup, matchupIndex }) {
+  const { setWinner } = useContext(BracketContext);
+  const { roundIndex } = useContext(RoundContext);
+  const [openDialog, setOpenDialog] = useState(false);
+  const onCancel = () => {
+    setOpenDialog(false);
+  };
+  const onConfirm = (winner, score) => {
+    setOpenDialog(false);
+    setWinner(roundIndex, matchupIndex, winner);
+  };
+
+  const getTeamName = (team) => {
+    if (team && team.players) {
+      return team.players[0].name + ' / ' + team.players[1].name;
+    } else return '- / -';
+  };
+
   return (
-    <MatchupContext.Provider value={{ matchup, matchupIndex }}>
-      <Matchup matchup={matchup}>
+    <MatchupContext.Provider value={{ matchup, matchupIndex, getTeamName }}>
+      <ScoreDialog open={openDialog} onCancel={onCancel} onConfirm={onConfirm} />
+      <Matchup matchup={matchup} onClick={() => setOpenDialog(true)}>
         <Bracket.RoundMerger />
         <Bracket.Teams />
         <Bracket.MatchupMerger />
@@ -46,27 +62,16 @@ Bracket.Teams = function BracketTeams() {
 };
 
 Bracket.Team = function BracketTeam({ teamIndex }) {
-  const { matchup, matchupIndex } = useContext(MatchupContext);
-  const { roundIndex } = useContext(RoundContext);
-  const { setWinner } = useContext(BracketContext);
+  const { matchup, getTeamName } = useContext(MatchupContext);
   const team = matchup.teams[teamIndex];
 
   let status;
   if (matchup.played) {
     status = matchup.winner === teamIndex ? 'W' : 'L';
   }
-  const getTeamName = (team) => {
-    if (team && team.players) {
-      return team.players[0].name + ' / ' + team.players[1].name;
-    } else return '- / -';
-  };
 
   return (
-    <Team
-      status={status}
-      matchup={matchup}
-      onClick={() => setWinner(roundIndex, matchupIndex, teamIndex)}
-    >
+    <Team status={status} matchup={matchup}>
       <span>{getTeamName(team)}</span>
     </Team>
   );
