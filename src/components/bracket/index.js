@@ -1,6 +1,6 @@
 import React, { useContext, createContext } from 'react';
 import {
-  Container,
+  Bracket,
   Round,
   Matchup,
   Teams,
@@ -11,7 +11,7 @@ import {
 
 const BracketContext = createContext({ rounds: 0 });
 const RoundContext = createContext(0);
-const MatchupContext = createContext(0);
+const MatchupContext = createContext({});
 
 Bracket.MatchupMerger = function BracketMatchupMerger() {
   const { rounds } = useContext(BracketContext);
@@ -45,19 +45,38 @@ Bracket.Matchup = function BracketMatchup({ matchup }) {
 Bracket.Teams = function BracketTeams({ matchup }) {
   return (
     <Teams>
-      <Bracket.Team isFirst={true} team={matchup.team1} />
-      <Bracket.Team isFirst={false} team={matchup.team2} />
+      <Bracket.Team index={0} team={matchup.team1} matchup={matchup} />
+      <Bracket.Team index={1} team={matchup.team2} matchup={matchup} />
     </Teams>
   );
 };
 
-Bracket.Team = function BracketTeam({ team, isFirst }) {
+Bracket.Team = function BracketTeam({ team, index, matchup }) {
+  let status;
+  if (matchup.played) {
+    status = matchup.winner === index ? 'W' : 'L';
+  }
   const getTeamName = (team) => {
     if (team.players) {
       return team.players[0].name + ' / ' + team.players[1].name;
     } else return '- / -';
   };
-  return <Team firstTeam={isFirst}>{getTeamName(team)}</Team>;
+
+  const setWinner = () => {
+    console.log('matchup before', matchup);
+    if (!matchup.playable) return;
+    console.log('test');
+    matchup.played = true;
+    matchup.playable = false;
+    matchup.winner = index;
+    console.log('matchup after', matchup);
+  };
+
+  return (
+    <Team index={index} status={status} matchup={matchup} onClick={setWinner}>
+      {getTeamName(team)}
+    </Team>
+  );
 };
 
 Bracket.Round = function BracketRound({ round }) {
@@ -74,10 +93,10 @@ Bracket.Round = function BracketRound({ round }) {
   );
 };
 
-export default function Bracket({ bracket }) {
+export default function BracketComponent({ bracket }) {
   return (
     <BracketContext.Provider value={{ rounds: bracket.rounds.length }}>
-      <Container rounds={bracket.rounds.length}>
+      <Bracket rounds={bracket.rounds.length}>
         {bracket.rounds.map((round, i) => {
           return (
             <RoundContext.Provider key={i} value={i}>
@@ -85,7 +104,7 @@ export default function Bracket({ bracket }) {
             </RoundContext.Provider>
           );
         })}
-      </Container>
+      </Bracket>
     </BracketContext.Provider>
   );
 }

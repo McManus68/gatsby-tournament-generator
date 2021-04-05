@@ -6,7 +6,7 @@ const GlobalStyles = createGlobalStyle`
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #35383C;
+    background-color: #161414;
     color: white;
     font-size: 1rem; 
   }
@@ -14,6 +14,8 @@ const GlobalStyles = createGlobalStyle`
 
 const Theme = ({ children }) => {
   const theme = {
+    primary: '#004AAD',
+    fg: '#f0f2f2',
     bracket: {
       bg: 'white',
       fg: '#2d2525',

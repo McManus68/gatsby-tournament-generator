@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container } from './styles/footer';
+import { Footer } from './styles/footer';
 
-export default function Footer() {
-  return <Container></Container>;
+export default function FooterComponent() {
+  return <Footer></Footer>;
 }

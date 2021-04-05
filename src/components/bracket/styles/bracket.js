@@ -12,7 +12,7 @@ function computeHeight(props) {
   }) * ${Math.pow(2, props.round)})`;
 }
 
-export const Container = styled.div`
+export const Bracket = styled.div`
   display: grid;
   grid-template-columns: repeat(
     ${(props) => props.rounds},
@@ -45,19 +45,31 @@ export const Team = styled.div`
   padding: 0 0.3rem;
   box-sizing: border-box;
   min-width: ${(props) => props.theme.bracket.teamWidth};
-  color: ${(props) => props.theme.bracket.fg};
-  border-left: 0.25rem solid ${(props) => props.theme.bracket.winner};
+  color: ${(props) =>
+    props.status === 'W' ? props.theme.bracket.winner : props.theme.bracket.fg};
+  border-left: 0.25rem solid
+    ${(props) =>
+      props.status === 'W' ? props.theme.bracket.winner : props.theme.primary};
   background: ${(props) => props.theme.bracket.bg};
   height: ${(props) => props.theme.bracket.teamHeight};
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-  ${({ firstTeam }) =>
-    firstTeam
+  ${({ index }) =>
+    index === 0
       ? css`
           border-radius: 0.25rem 0.25rem 0 0;
         `
       : css`
           border-radius: 0 0 0.25rem 0.25rem;
         `}
+
+  ${({ matchup }) =>
+    matchup.playable &&
+    css`
+      cursor: pointer;
+      &:hover {
+        background: ${(props) => props.theme.bracket.winner};
+      }
+    `}
   &:nth-child(1) {
     border-bottom: thin solid ${(props) => props.theme.bracket.border};
   }
