@@ -1,15 +1,10 @@
 import styled, { css } from 'styled-components/macro';
 
-function computeWidth(props) {
-  return `calc(
-    ( ${props.theme.bracket.gridWidth} - ${props.theme.bracket.teamWidth} ) / 2
-  )`;
-}
-
 function computeHeight(props) {
-  return `calc((${props.theme.bracket.teamHeight} + ${
-    props.theme.bracket.gridGap
-  }) * ${Math.pow(2, props.round)})`;
+  return `calc((${props.theme.bracket.teamHeight} + ${props.theme.bracket.gap}) * ${Math.pow(
+    2,
+    props.roundIndex
+  )})`;
 }
 
 export const Bracket = styled.div`
@@ -28,14 +23,24 @@ export const Round = styled.section`
 
 export const Matchup = styled.div`
   display: flex;
-  margin: ${(props) => props.theme.bracket.gridGap};
+  box-sizing: border-box;
+  margin: ${(props) => props.theme.bracket.gap};
   border-radius: 0.25rem;
   position: relative;
+  background-color: blue;
+  ${({ matchup }) =>
+    matchup.playable &&
+    css`
+      cursor: pointer;
+    `}
 `;
 
 export const Teams = styled.div`
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
+  border-radius: 0.25rem;
+  overflow: hidden;
 `;
 
 export const Team = styled.div`
@@ -44,30 +49,27 @@ export const Team = styled.div`
   align-items: center;
   padding: 0 0.3rem;
   box-sizing: border-box;
-  min-width: ${(props) => props.theme.bracket.teamWidth};
-  color: ${(props) =>
-    props.status === 'W' ? props.theme.bracket.winner : props.theme.bracket.fg};
-  border-left: 0.25rem solid
-    ${(props) =>
-      props.status === 'W' ? props.theme.bracket.winner : props.theme.primary};
+  width: 100%;
+  color: ${(props) => props.theme.bracket.fg};
+  border-left: 0.25rem solid ${(props) => props.theme.primary};
   background: ${(props) => props.theme.bracket.bg};
   height: ${(props) => props.theme.bracket.teamHeight};
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-  ${({ index }) =>
-    index === 0
-      ? css`
-          border-radius: 0.25rem 0.25rem 0 0;
-        `
-      : css`
-          border-radius: 0 0 0.25rem 0.25rem;
-        `}
 
-  ${({ matchup }) =>
-    matchup.playable &&
+  ${({ status }) =>
+    status === 'W' &&
     css`
-      cursor: pointer;
-      &:hover {
-        background: ${(props) => props.theme.bracket.winner};
+      color: ${(props) => props.theme.bracket.winner};
+      border-left: 0.25rem solid ${(props) => props.theme.bracket.winner};
+      font-weight: bold;
+    `}
+  ${({ status }) =>
+    status === 'L' &&
+    css`
+      color: ${(props) => props.theme.bracket.looser};
+      border-left: 0.25rem solid ${(props) => props.theme.bracket.looser};
+      span {
+        opacity: 0.7;
       }
     `}
   &:nth-child(1) {
@@ -77,14 +79,14 @@ export const Team = styled.div`
 
 export const MatchupMerger = styled.div`
   position: relative;
-  ${({ lastRound }) =>
-    !lastRound &&
+  ${({ last }) =>
+    !last &&
     css`
       &:after {
         content: '';
         position: absolute;
         box-sizing: border-box;
-        width: ${(props) => computeWidth(props)};
+        width: ${(props) => props.theme.bracket.gap};
         height: 2px;
         background: ${(props) => props.theme.bracket.border};
         top: calc(50% - 1px);
@@ -98,9 +100,9 @@ export const MatchupMerger = styled.div`
         width: 2px;
         height: ${(props) => computeHeight(props)};
         background: ${(props) => props.theme.bracket.border};
-        left: ${(props) => computeWidth(props)};
-        ${({ odd }) =>
-          odd
+        left: ${(props) => props.theme.bracket.gap};
+        ${({ matchupIndex }) =>
+          matchupIndex % 2 === 0
             ? css`
                 top: calc(50% - 1px);
               `
@@ -113,18 +115,18 @@ export const MatchupMerger = styled.div`
 
 export const RoundMerger = styled.div`
   position: relative;
-  ${({ firstRound }) =>
-    !firstRound &&
+  ${({ first }) =>
+    !first &&
     css`
       &:before {
         content: '';
         position: absolute;
         box-sizing: border-box;
-        width: ${(props) => computeWidth(props)};
+        width: ${(props) => props.theme.bracket.gap};
         height: 2px;
         background: ${(props) => props.theme.bracket.border};
         top: calc(50% - 1px);
-        left: calc(${(props) => computeWidth(props)} * -1);
+        left: calc(${(props) => props.theme.bracket.gap} * -1);
       }
     `}
 `;

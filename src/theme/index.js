@@ -15,17 +15,17 @@ const GlobalStyles = createGlobalStyle`
 const Theme = ({ children }) => {
   const theme = {
     primary: '#004AAD',
-    fg: '#f0f2f2',
+    fg: 'white',
     bracket: {
       bg: 'white',
+      bgDarker: 'rgb(222,229,225)',
       fg: '#2d2525',
-      winner: '#60c645',
-      looser: 'yellow',
+      winner: '#247214',
+      looser: '#d0151d',
       border: '#f0f2f2',
-      gridGap: '2rem',
-      gridWidth: '22rem',
+      gap: '3rem',
+      gridWidth: '20rem',
       teamHeight: '2.5rem',
-      teamWidth: '16rem',
     },
     header: {
       bg: 'black',

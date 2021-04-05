@@ -1,108 +1,120 @@
 import React, { useContext, createContext } from 'react';
-import {
-  Bracket,
-  Round,
-  Matchup,
-  Teams,
-  Team,
-  MatchupMerger,
-  RoundMerger,
-} from './styles/bracket';
+import { Bracket, Round, Matchup, Teams, Team, MatchupMerger, RoundMerger } from './styles/bracket';
 
-const BracketContext = createContext({ rounds: 0 });
-const RoundContext = createContext(0);
+const BracketContext = createContext({});
+const RoundContext = createContext({});
 const MatchupContext = createContext({});
 
 Bracket.MatchupMerger = function BracketMatchupMerger() {
-  const { rounds } = useContext(BracketContext);
-  const round = useContext(RoundContext);
-  const matchup = useContext(MatchupContext);
+  const { bracket } = useContext(BracketContext);
+  const { roundIndex } = useContext(RoundContext);
+  const { matchupIndex } = useContext(MatchupContext);
 
   return (
     <MatchupMerger
-      odd={matchup % 2 === 0}
-      round={round}
-      lastRound={round === rounds - 1}
+      matchupIndex={matchupIndex}
+      roundIndex={roundIndex}
+      last={roundIndex === bracket.rounds.length - 1}
     />
   );
 };
 
 Bracket.RoundMerger = function BracketRoundMerger() {
-  const round = React.useContext(RoundContext);
-  return <RoundMerger firstRound={round === 0} />;
+  const { roundIndex } = useContext(RoundContext);
+  return <RoundMerger first={roundIndex === 0} />;
 };
 
-Bracket.Matchup = function BracketMatchup({ matchup }) {
+Bracket.Matchup = function BracketMatchup({ matchup, matchupIndex }) {
   return (
-    <Matchup>
-      <Bracket.RoundMerger />
-      <Bracket.Teams matchup={matchup} />
-      <Bracket.MatchupMerger />
-    </Matchup>
+    <MatchupContext.Provider value={{ matchup, matchupIndex }}>
+      <Matchup matchup={matchup}>
+        <Bracket.RoundMerger />
+        <Bracket.Teams />
+        <Bracket.MatchupMerger />
+      </Matchup>
+    </MatchupContext.Provider>
   );
 };
 
-Bracket.Teams = function BracketTeams({ matchup }) {
+Bracket.Teams = function BracketTeams() {
   return (
     <Teams>
-      <Bracket.Team index={0} team={matchup.team1} matchup={matchup} />
-      <Bracket.Team index={1} team={matchup.team2} matchup={matchup} />
+      <Bracket.Team teamIndex={0} />
+      <Bracket.Team teamIndex={1} />
     </Teams>
   );
 };
 
-Bracket.Team = function BracketTeam({ team, index, matchup }) {
+Bracket.Team = function BracketTeam({ teamIndex }) {
+  const { matchup, matchupIndex } = useContext(MatchupContext);
+  const { roundIndex } = useContext(RoundContext);
+  const { setWinner } = useContext(BracketContext);
+  const team = matchup.teams[teamIndex];
+
   let status;
   if (matchup.played) {
-    status = matchup.winner === index ? 'W' : 'L';
+    status = matchup.winner === teamIndex ? 'W' : 'L';
   }
   const getTeamName = (team) => {
-    if (team.players) {
+    if (team && team.players) {
       return team.players[0].name + ' / ' + team.players[1].name;
     } else return '- / -';
   };
 
-  const setWinner = () => {
-    console.log('matchup before', matchup);
-    if (!matchup.playable) return;
-    console.log('test');
-    matchup.played = true;
-    matchup.playable = false;
-    matchup.winner = index;
-    console.log('matchup after', matchup);
-  };
-
   return (
-    <Team index={index} status={status} matchup={matchup} onClick={setWinner}>
-      {getTeamName(team)}
+    <Team
+      status={status}
+      matchup={matchup}
+      onClick={() => setWinner(roundIndex, matchupIndex, teamIndex)}
+    >
+      <span>{getTeamName(team)}</span>
     </Team>
   );
 };
 
-Bracket.Round = function BracketRound({ round }) {
+Bracket.Round = function BracketRound({ round, roundIndex }) {
   return (
-    <Round>
-      {round.matchups.map((matchup, i) => {
-        return (
-          <MatchupContext.Provider key={i} value={i}>
-            <Bracket.Matchup matchup={matchup} />
-          </MatchupContext.Provider>
-        );
-      })}
-    </Round>
+    <RoundContext.Provider value={{ roundIndex }}>
+      <Round>
+        {round.matchups.map((matchup, i) => {
+          return <Bracket.Matchup key={i} matchup={matchup} matchupIndex={i} />;
+        })}
+      </Round>
+    </RoundContext.Provider>
   );
 };
 
-export default function BracketComponent({ bracket }) {
+export default function BracketComponent(props) {
+  const [bracket, setBracket] = React.useState(props.bracket);
+
+  const setWinner = (roundIndex, matchupIndex, teamIndex) => {
+    // Le score est sur un match jouable
+    let matchup = bracket.rounds[roundIndex].matchups[matchupIndex];
+    if (!matchup.playable) return;
+
+    // Positionnement du résultat
+    let newMatchup = { ...matchup, played: true, playable: false, winner: teamIndex };
+    let newBracket = { ...bracket };
+    newBracket.rounds[roundIndex].matchups[matchupIndex] = newMatchup;
+
+    // Grande finale? Auquel cas le tournoi est terminé
+    if (roundIndex === bracket.rounds.length - 1) {
+      newBracket.completed = true;
+    } else {
+      const nextMatchupIndex = Math.floor(matchupIndex / 2);
+      const nextMatchupTeamIndex = matchupIndex % 2;
+      const nextMatchup = newBracket.rounds[roundIndex + 1].matchups[nextMatchupIndex];
+      nextMatchup.teams[nextMatchupTeamIndex] = matchup.teams[teamIndex];
+      nextMatchup.playable = nextMatchup.teams[0] && nextMatchup.teams[1];
+    }
+    setBracket(newBracket);
+  };
+
   return (
-    <BracketContext.Provider value={{ rounds: bracket.rounds.length }}>
+    <BracketContext.Provider value={{ bracket, setWinner }}>
       <Bracket rounds={bracket.rounds.length}>
         {bracket.rounds.map((round, i) => {
-          return (
-            <RoundContext.Provider key={i} value={i}>
-              <Bracket.Round round={round} />
-            </RoundContext.Provider>
-          );
+          return <Bracket.Round key={i} round={round} roundIndex={i} />;
         })}
       </Bracket>
     </BracketContext.Provider>
