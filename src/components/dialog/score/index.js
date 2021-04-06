@@ -10,9 +10,8 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
-import Select from '@material-ui/core/Select';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+
 import { MatchupContext } from '../../../context/context';
 
 const DialogContentForm = styled.div`
@@ -24,48 +23,17 @@ const DialogContentForm = styled.div`
   }
 `;
 
-const DialogContentFormScores = styled.div`
-  display: flex;
-  & > div {
-    margin-right: 1.5rem;
-    width: 80px;
-  }
-`;
-
-const DialogContentFormScore = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 export default function ScoreDialog({ open, onCancel, onConfirm }) {
   const { getTeamName, matchup } = useContext(MatchupContext);
   const [winner, setWinner] = useState(-1);
-  const [score, setScore] = useState(['', '', '']);
+  const [score, setScore] = useState('');
 
-  const availableScores = [
-    '6/0',
-    '6/1',
-    '6/2',
-    '6/3',
-    '6/4',
-    '7/5',
-    '7/6',
-    '0/6',
-    '1/6',
-    '2/6',
-    '3/6',
-    '4/6',
-    '5/7',
-    '6/7',
-  ];
   const onWinnerChange = (event) => {
     setWinner(event.target.value);
   };
 
-  const onSetScoreChange = (event, setIndex) => {
-    const newScore = { ...score };
-    newScore[setIndex] = event.target.value;
-    setScore(newScore);
+  const onScoreChange = (event) => {
+    setScore(event.target.value);
   };
 
   return (
@@ -85,27 +53,7 @@ export default function ScoreDialog({ open, onCancel, onConfirm }) {
           </RadioGroup>
 
           <FormLabel component="legend">Score</FormLabel>
-          <DialogContentFormScores>
-            {Array.from(Array(3), (e, i) => {
-              return (
-                <DialogContentFormScore key={i}>
-                  <Select
-                    value={score[i]}
-                    onChange={(e) => onSetScoreChange(e, i)}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Set n°' + (i + 1) }}
-                  >
-                    {availableScores.map((score, i) => (
-                      <MenuItem key={i} value={score}>
-                        {score}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  <FormHelperText>Set n°{i + 1}</FormHelperText>
-                </DialogContentFormScore>
-              );
-            })}
-          </DialogContentFormScores>
+          <TextField id="filled-basic" variant="outlined" value={score} onChange={onScoreChange} />
         </DialogContentForm>
       </DialogContent>
       <DialogActions>

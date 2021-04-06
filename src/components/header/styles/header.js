@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/macro';
-
 import MatButton from '@material-ui/core/Button';
 
 export const Header = styled.header`
@@ -18,7 +17,21 @@ export const Logo = styled.img`
 `;
 
 export const Button = styled(MatButton)`
-  color: white;
+  margin: 0 5rem;
+  .MuiButton-outlinedPrimary {
+    color: white;
+  }
+`;
+
+export const Left = styled.div`
+  display: flex;
+  justify-content: flex-start;
+`;
+
+export const Right = styled.div`
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
 `;
 
 export const Title = styled.h1`
@@ -27,5 +40,20 @@ export const Title = styled.h1`
 
   span {
     color: ${(props) => props.theme.fg};
+  }
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  .MuiInputBase-root,
+  .MuiFormHelperText-root,
+  .MuiSelect-icon {
+    color: white;
+  }
+
+  .MuiButton-outlinedPrimary {
+    color: white;
+    margin: 0 1rem;
   }
 `;

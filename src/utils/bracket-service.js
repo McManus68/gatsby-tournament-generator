@@ -1,6 +1,26 @@
-import teams from '../content/teams_8.json';
+import teams8 from '../content/teams_8.json';
+import teams16 from '../content/teams_16.json';
+import teams32 from '../content/teams_32.json';
+import teams64 from '../content/teams_64.json';
+import teams128 from '../content/teams_128.json';
 
-export default function generateBracket() {
+function getData(size) {
+  switch (size) {
+    case 8:
+      return teams8;
+    case 16:
+      return teams16;
+    case 32:
+      return teams32;
+    case 64:
+      return teams64;
+    case 128:
+      return teams128;
+  }
+}
+
+export default function generateBracket(size) {
+  const teams = getData(size);
   console.log('teams length', teams.length);
   // Nombre de rounds
   const rounds = Math.floor(Math.log(teams.length) / Math.log(2));

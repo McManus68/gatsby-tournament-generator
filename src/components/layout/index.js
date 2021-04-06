@@ -6,6 +6,7 @@ import Footer from '../footer';
 
 const StyledMain = styled.main`
   height: 90vh;
+  margin-top: 2rem;
 `;
 
 export default function LayoutComponent({ children }) {
@@ -13,7 +14,6 @@ export default function LayoutComponent({ children }) {
     <Layout>
       <Header />
       <StyledMain>{children}</StyledMain>
-      <Footer />
     </Layout>
   );
 }

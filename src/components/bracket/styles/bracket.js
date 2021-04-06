@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components/macro';
 
 function computeHeight(props) {
-  return `calc((${props.theme.bracket.teamHeight} + ${props.theme.bracket.gap}) * ${Math.pow(
+  return `calc((${props.theme.bracket.teamHeight} + ${props.theme.bracket.gapX}) * ${Math.pow(
     2,
     props.roundIndex
   )})`;
@@ -24,7 +24,7 @@ export const Round = styled.section`
 export const Matchup = styled.div`
   display: flex;
   box-sizing: border-box;
-  margin: ${(props) => props.theme.bracket.gap};
+  margin: ${(props) => props.theme.bracket.gapY} ${(props) => props.theme.bracket.gapX};
   border-radius: 0.25rem;
   position: relative;
   background-color: blue;
@@ -86,7 +86,7 @@ export const MatchupMerger = styled.div`
         content: '';
         position: absolute;
         box-sizing: border-box;
-        width: ${(props) => props.theme.bracket.gap};
+        width: ${(props) => props.theme.bracket.gapX};
         height: 2px;
         background: ${(props) => props.theme.bracket.border};
         top: calc(50% - 1px);
@@ -100,7 +100,7 @@ export const MatchupMerger = styled.div`
         width: 2px;
         height: ${(props) => computeHeight(props)};
         background: ${(props) => props.theme.bracket.border};
-        left: ${(props) => props.theme.bracket.gap};
+        left: ${(props) => props.theme.bracket.gapX};
         ${({ matchupIndex }) =>
           matchupIndex % 2 === 0
             ? css`
@@ -122,11 +122,27 @@ export const RoundMerger = styled.div`
         content: '';
         position: absolute;
         box-sizing: border-box;
-        width: ${(props) => props.theme.bracket.gap};
+        width: ${(props) => props.theme.bracket.gapX};
         height: 2px;
         background: ${(props) => props.theme.bracket.border};
         top: calc(50% - 1px);
-        left: calc(${(props) => props.theme.bracket.gap} * -1);
+        left: calc(${(props) => props.theme.bracket.gapX} * -1);
       }
     `}
+`;
+
+export const Score = styled.div`
+  position: absolute;
+  color: ${(props) => props.theme.bracket.border};
+  left: calc(100% + 0.2rem);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  ${({ matchupIndex }) =>
+    matchupIndex % 2 === 0
+      ? css`
+          top: 1rem;
+        `
+      : css`
+          bottom: 1rem;
+        `}
 `;
