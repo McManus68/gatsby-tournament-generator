@@ -15,9 +15,13 @@ const config = {
   measurementId: 'G-JMRCC4E6CP',
 };
 
-let firebase = Firebase.initializeApp(config);
+let firebase = null;
 
-firebase.auth().signInAnonymously();
+if (typeof window !== 'undefined') {
+  firebase = Firebase.initializeApp(config);
+  firebase.auth().signInAnonymously();
+}
+
 // 2) when seeding the database you'll have to uncomment this!
 //seedDatabase(index)
 // 3) once you have populated the database (only run once!), re-comment this so you don't get duplicate data

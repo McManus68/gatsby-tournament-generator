@@ -1,6 +1,6 @@
 import { firebase } from '../firebase/firebase.prod';
 
-const db = firebase.firestore().collection('teams');
+const db = firebase ? firebase.firestore().collection('teams') : null;
 
 class TeamService {
   async getAll() {

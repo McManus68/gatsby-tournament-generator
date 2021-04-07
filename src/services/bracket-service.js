@@ -1,6 +1,6 @@
 import { firebase } from '../firebase/firebase.prod';
 
-const db = firebase.firestore().collection('brackets');
+const db = firebase ? firebase.firestore().collection('brackets') : null;
 
 class BracketService {
   async getAll() {
