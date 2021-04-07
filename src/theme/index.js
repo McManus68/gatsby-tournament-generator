@@ -15,7 +15,7 @@ const GlobalStyles = createGlobalStyle`
 const Theme = ({ children }) => {
   const theme = {
     primary: '#004AAD',
-    secondary: '#de5149',
+    secondary: '#d0bbba',
     primaryDarker: '#07408c',
     fg: 'white',
     bracket: {

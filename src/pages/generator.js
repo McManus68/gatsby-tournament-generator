@@ -16,7 +16,7 @@ const Header = styled.div`
   display: flex;
   justify-content: center;
   max-width: 100%;
-  margin: 2.5rem;
+  margin: 3rem;
 `;
 
 const StyledFancyButton = styled(FancyButton)`
@@ -50,7 +50,7 @@ const BracketGeneratorPage = () => {
               </select>
 
               <StyledFancyButton color="secondary" onClick={onGenerateNewBracket}>
-                Générer un tournoi
+                Simuler un tournoi
               </StyledFancyButton>
             </Header>
             {bracket && <Bracket bracket={bracket} />}

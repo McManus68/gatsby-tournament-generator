@@ -1,8 +1,8 @@
 import { firebase } from '../firebase/firebase.prod';
 
-const db = firebase.firestore().collection('brackets');
+const db = firebase.firestore().collection('teams');
 
-class BracketService {
+class TeamService {
   async getAll() {
     const snapshot = await db.get();
     const brackets = [];
@@ -46,4 +46,4 @@ class BracketService {
   }
 }
 
-export default new BracketService();
+export default new TeamService();
