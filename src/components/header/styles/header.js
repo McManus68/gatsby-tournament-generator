@@ -1,12 +1,13 @@
 import styled, { css } from 'styled-components/macro';
 import MatButton from '@material-ui/core/Button';
+import { Link } from 'gatsby';
 
 export const Header = styled.header`
   display: flex;
   box-sizing: border-box;
   align-items: center;
   height: 80px;
-  padding: 0rem 2rem;
+  padding: 0 1rem;
   background: ${(props) => props.theme.header.bg};
   box-shadow: 0px 0px 4px 3px ${(props) => props.theme.primary};
 `;
@@ -23,15 +24,29 @@ export const Button = styled(MatButton)`
   }
 `;
 
-export const Left = styled.div`
+export const Home = styled(Link)`
   display: flex;
   justify-content: flex-start;
+  text-decoration: none;
 `;
 
-export const Right = styled.div`
+export const Nav = styled.div`
   display: flex;
-  flex-grow: 1;
   justify-content: flex-end;
+  margin-left: auto;
+`;
+
+export const Item = styled(Link)`
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 1.1rem;
+  height: 100%;
+  color: ${(props) => props.theme.fg};
+
+  &:hover {
+    color: ${(props) => props.theme.primaryDarker};
+  }
 `;
 
 export const Title = styled.h1`

@@ -12,7 +12,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField';
 
-import { MatchupContext } from '../../../context/context';
+import { MatchupContext } from '../../../context/bracket';
 
 const DialogContentForm = styled.div`
   display: flex;
@@ -25,11 +25,11 @@ const DialogContentForm = styled.div`
 
 export default function ScoreDialog({ open, onCancel, onConfirm }) {
   const { getTeamName, matchup } = useContext(MatchupContext);
-  const [winner, setWinner] = useState(-1);
+  const [winnerTeam, setWinnerTeam] = useState(-1);
   const [score, setScore] = useState('');
 
   const onWinnerChange = (event) => {
-    setWinner(event.target.value);
+    setWinnerTeam(event.target.value * 1);
   };
 
   const onScoreChange = (event) => {
@@ -47,9 +47,14 @@ export default function ScoreDialog({ open, onCancel, onConfirm }) {
 
         <DialogContentForm>
           <FormLabel component="legend">Vainqueur</FormLabel>
-          <RadioGroup aria-label="winner" name="winner" value={winner} onChange={onWinnerChange}>
-            <FormControlLabel value="0" control={<Radio />} label={getTeamName(matchup.teams[0])} />
-            <FormControlLabel value="1" control={<Radio />} label={getTeamName(matchup.teams[1])} />
+          <RadioGroup
+            aria-label="winner"
+            name="winner"
+            value={winnerTeam}
+            onChange={onWinnerChange}
+          >
+            <FormControlLabel value={0} control={<Radio />} label={getTeamName(matchup.teams[0])} />
+            <FormControlLabel value={1} control={<Radio />} label={getTeamName(matchup.teams[1])} />
           </RadioGroup>
 
           <FormLabel component="legend">Score</FormLabel>
@@ -60,7 +65,7 @@ export default function ScoreDialog({ open, onCancel, onConfirm }) {
         <Button onClick={onCancel} color="secondary">
           Annuler
         </Button>
-        <Button onClick={() => onConfirm(winner * 1, score)} color="primary">
+        <Button onClick={() => onConfirm(winnerTeam, score)} color="primary">
           Confirmer le score
         </Button>
       </DialogActions>

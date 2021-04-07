@@ -10,7 +10,7 @@ import {
   Score,
 } from './styles/bracket';
 import ScoreDialog from '../dialog/score';
-import { BracketContext, MatchupContext, RoundContext } from '../../context/context';
+import { BracketContext, MatchupContext, RoundContext } from '../../context/bracket';
 
 Bracket.MatchupMerger = function BracketMatchupMerger() {
   const { bracket } = useContext(BracketContext);
@@ -56,7 +56,7 @@ Bracket.Matchup = function BracketMatchup({ matchup, matchupIndex }) {
 };
 
 Bracket.Teams = function BracketTeams() {
-  const { setWinner } = useContext(BracketContext);
+  const { bracket, setBracket, setWinner } = useContext(BracketContext);
   const { matchupIndex, matchup } = useContext(MatchupContext);
   const { roundIndex } = useContext(RoundContext);
   const [openDialog, setOpenDialog] = useState(false);
@@ -64,9 +64,10 @@ Bracket.Teams = function BracketTeams() {
     setOpenDialog(false);
   };
 
-  const onConfirm = (winner, score) => {
+  const onConfirmScore = (winner, score) => {
     setOpenDialog(false);
-    setWinner(roundIndex, matchupIndex, winner, score);
+    const newBracket = setWinner(bracket, roundIndex, matchupIndex, winner, score);
+    setBracket(newBracket);
   };
 
   const onOpenDialog = () => {
@@ -77,7 +78,7 @@ Bracket.Teams = function BracketTeams() {
 
   return (
     <>
-      <ScoreDialog open={openDialog} onCancel={onCancel} onConfirm={onConfirm} />
+      <ScoreDialog open={openDialog} onCancel={onCancel} onConfirm={onConfirmScore} />
       <Teams onClick={onOpenDialog}>
         <Bracket.Team teamIndex={0} />
         <Bracket.Team teamIndex={1} />

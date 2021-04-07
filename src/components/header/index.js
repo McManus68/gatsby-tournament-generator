@@ -1,25 +1,19 @@
 import React from 'react';
-import { Header, Logo, Button, Title, Actions, Left, Right } from './styles/header';
+import { Header, Logo, Button, Title, Home, Nav, Item } from './styles/header';
 import logo from '../../images/logo3.png';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { BracketContext } from '../../context/context';
-import generateBracket from '../../utils/bracket-service';
 
 export default function HeaderComponent() {
   return (
     <Header>
-      <Header.Left>
+      <Header.Home to="/">
         <Header.Logo />
         <Header.Title>
           King Of <span>Padel</span>
         </Header.Title>
-      </Header.Left>
-      <Header.Right>
-        <Header.Actions />
-      </Header.Right>
+      </Header.Home>
+      <Header.Nav>
+        <Header.Item to="/generator">Simulateur de tournoi</Header.Item>
+      </Header.Nav>
     </Header>
   );
 }
@@ -28,12 +22,16 @@ Header.Logo = function HeaderLogo() {
   return <Logo src={logo} />;
 };
 
-Header.Left = function HeaderLeft({ children }) {
-  return <Left>{children}</Left>;
+Header.Home = function HeaderHome({ children, ...restProps }) {
+  return <Home {...restProps}>{children}</Home>;
 };
 
-Header.Right = function HeaderRight({ children }) {
-  return <Right>{children}</Right>;
+Header.Nav = function HeaderNav({ children, ...restProps }) {
+  return <Nav {...restProps}>{children}</Nav>;
+};
+
+Header.Item = function HeaderItem({ children, ...restProps }) {
+  return <Item {...restProps}>{children}</Item>;
 };
 
 Header.Title = function HeaderTitle({ children }) {
@@ -42,42 +40,4 @@ Header.Title = function HeaderTitle({ children }) {
 
 Header.Button = function HeaderButton({ children, ...restProps }) {
   return <Button {...restProps}>{children}</Button>;
-};
-
-Header.Actions = function HeaderActions() {
-  const { setBracket, bracket } = React.useContext(BracketContext);
-  const [teamCount, setTeamCount] = React.useState(16);
-  const handleChange = (event) => {
-    setTeamCount(event.target.value);
-  };
-
-  const onGenerateNewBracket = () => {
-    let newBracket = generateBracket(teamCount);
-    console.log('setBracket', bracket);
-    setBracket(newBracket);
-  };
-
-  return (
-    <Actions>
-      <FormControl>
-        <Select
-          color="accent"
-          value={teamCount}
-          onChange={handleChange}
-          inputProps={{ 'aria-label': 'Taille du tournoi' }}
-        >
-          <MenuItem value={8}>8</MenuItem>
-          <MenuItem value={16}>16</MenuItem>
-          <MenuItem value={32}>32</MenuItem>
-          <MenuItem value={64}>64</MenuItem>
-          <MenuItem value={128}>128</MenuItem>
-        </Select>
-        <FormHelperText>Nombre d'équipes</FormHelperText>
-      </FormControl>
-
-      <Button color="primary" variant="outlined" onClick={onGenerateNewBracket}>
-        Générer un tournoi
-      </Button>
-    </Actions>
-  );
 };

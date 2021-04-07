@@ -19,22 +19,23 @@ function getData(size) {
   }
 }
 
-export default function generateBracket(size) {
+export function generateRandomBracket(size) {
   const teams = getData(size);
-  console.log('teams length', teams.length);
+  return generateBracket(teams);
+}
+
+export function generateBracket(teams) {
   // Nombre de rounds
   const rounds = Math.floor(Math.log(teams.length) / Math.log(2));
-  console.log('rounds length', rounds);
   // Initialisation de l'objet bracket
   let bracket = { rounds: new Array(rounds), completed: false };
   for (let i = 0; i < rounds; i++) {
     let matchups = Math.floor(teams.length / Math.pow(2, i + 1));
-    console.log('matchups on round ' + i, matchups);
     bracket.rounds[i] = { matchups: new Array(matchups) };
     //
     for (let j = 0; j < bracket.rounds[i].matchups.length; j++) {
       bracket.rounds[i].matchups[j] = {
-        teams: new Array(2),
+        teams: [{}, {}],
         playable: false,
         played: false,
         winner: -1,
@@ -52,4 +53,27 @@ export default function generateBracket(size) {
     };
   }
   return bracket;
+}
+
+export function setWinner(bracket, roundIndex, matchupIndex, teamIndex, score) {
+  // Le score est sur un match jouable
+  let matchup = bracket.rounds[roundIndex].matchups[matchupIndex];
+  if (!matchup.playable) return;
+
+  // Positionnement du résultat
+  let newMatchup = { ...matchup, played: true, playable: false, winner: teamIndex, score };
+  let newBracket = { ...bracket };
+  newBracket.rounds[roundIndex].matchups[matchupIndex] = newMatchup;
+
+  // Grande finale? Auquel cas le tournoi est terminé
+  if (roundIndex === bracket.rounds.length - 1) {
+    newBracket.completed = true;
+  } else {
+    const nextMatchupIndex = Math.floor(matchupIndex / 2);
+    const nextMatchupTeamIndex = matchupIndex % 2;
+    const nextMatchup = newBracket.rounds[roundIndex + 1].matchups[nextMatchupIndex];
+    nextMatchup.teams[nextMatchupTeamIndex] = matchup.teams[teamIndex];
+    nextMatchup.playable = nextMatchup.teams[0] && nextMatchup.teams[1];
+  }
+  return newBracket;
 }
