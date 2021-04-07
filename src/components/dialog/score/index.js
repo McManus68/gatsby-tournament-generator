@@ -36,6 +36,12 @@ export default function ScoreDialog({ open, onCancel, onConfirm }) {
     setScore(event.target.value);
   };
 
+  const onConfirmDialog = () => {
+    onConfirm(winnerTeam, score);
+    setWinnerTeam(-1);
+    setScore('');
+  };
+
   return (
     <Dialog open={open} onClose={onCancel} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Enregistrer le score</DialogTitle>
@@ -65,7 +71,7 @@ export default function ScoreDialog({ open, onCancel, onConfirm }) {
         <Button onClick={onCancel} color="secondary">
           Annuler
         </Button>
-        <Button onClick={() => onConfirm(winnerTeam, score)} color="primary">
+        <Button onClick={onConfirmDialog} color="primary">
           Confirmer le score
         </Button>
       </DialogActions>

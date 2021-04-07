@@ -1,19 +1,22 @@
 import React from 'react';
 import { Header, Logo, Button, Title, Home, Nav, Item } from './styles/header';
 import logo from '../../images/logo3.png';
+import { Container } from '../container';
 
 export default function HeaderComponent() {
   return (
     <Header>
-      <Header.Home to="/">
-        <Header.Logo />
-        <Header.Title>
-          King Of <span>Padel</span>
-        </Header.Title>
-      </Header.Home>
-      <Header.Nav>
-        <Header.Item to="/generator">Simulateur de tournoi</Header.Item>
-      </Header.Nav>
+      <Container>
+        <Header.Home to="/">
+          <Header.Logo />
+          <Header.Title>
+            King Of <span>Padel</span>
+          </Header.Title>
+        </Header.Home>
+        <Header.Nav>
+          <Header.Item to="/generator">Simulateur de tournoi</Header.Item>
+        </Header.Nav>
+      </Container>
     </Header>
   );
 }

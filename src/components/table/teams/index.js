@@ -12,7 +12,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
+    minWidth: 450,
   },
 });
 

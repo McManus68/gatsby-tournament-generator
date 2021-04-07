@@ -45,7 +45,7 @@ export const Item = styled(Link)`
   color: ${(props) => props.theme.fg};
 
   &:hover {
-    color: ${(props) => props.theme.primaryDarker};
+    color: ${(props) => props.theme.primary};
   }
 `;
 

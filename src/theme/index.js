@@ -1,5 +1,6 @@
 import React from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import { createMuiTheme, ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 
 const GlobalStyles = createGlobalStyle`
   html, body { 
@@ -14,9 +15,8 @@ const GlobalStyles = createGlobalStyle`
 
 const Theme = ({ children }) => {
   const theme = {
-    primary: '#004AAD',
-    secondary: '#d0bbba',
-    primaryDarker: '#07408c',
+    primary: '#0086C0',
+    secondary: '#D63CA0',
     fg: 'white',
     bracket: {
       bg: 'white',
@@ -35,10 +35,21 @@ const Theme = ({ children }) => {
     },
   };
 
+  const muiTheme = createMuiTheme({
+    palette: {
+      primary: {
+        main: theme.primary,
+      },
+      secondary: {
+        main: theme.secondary,
+      },
+    },
+  });
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
-      {children}
+      <MuiThemeProvider theme={muiTheme}>{children}</MuiThemeProvider>
     </ThemeProvider>
   );
 };

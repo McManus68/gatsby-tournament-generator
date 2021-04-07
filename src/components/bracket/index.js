@@ -11,6 +11,7 @@ import {
 } from './styles/bracket';
 import ScoreDialog from '../dialog/score';
 import { BracketContext, MatchupContext, RoundContext } from '../../context/bracket';
+import { BracketService } from '../../services';
 
 Bracket.MatchupMerger = function BracketMatchupMerger() {
   const { bracket } = useContext(BracketContext);
@@ -56,7 +57,7 @@ Bracket.Matchup = function BracketMatchup({ matchup, matchupIndex }) {
 };
 
 Bracket.Teams = function BracketTeams() {
-  const { bracket, setBracket, setWinner } = useContext(BracketContext);
+  const { bracket, setBracket, setWinner, db } = useContext(BracketContext);
   const { matchupIndex, matchup } = useContext(MatchupContext);
   const { roundIndex } = useContext(RoundContext);
   const [openDialog, setOpenDialog] = useState(false);
@@ -67,6 +68,9 @@ Bracket.Teams = function BracketTeams() {
   const onConfirmScore = (winner, score) => {
     setOpenDialog(false);
     const newBracket = setWinner(bracket, roundIndex, matchupIndex, winner, score);
+    if (db) {
+      BracketService.update(newBracket);
+    }
     setBracket(newBracket);
   };
 

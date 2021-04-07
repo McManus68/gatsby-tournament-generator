@@ -73,7 +73,12 @@ export function setWinner(bracket, roundIndex, matchupIndex, teamIndex, score) {
     const nextMatchupTeamIndex = matchupIndex % 2;
     const nextMatchup = newBracket.rounds[roundIndex + 1].matchups[nextMatchupIndex];
     nextMatchup.teams[nextMatchupTeamIndex] = matchup.teams[teamIndex];
-    nextMatchup.playable = nextMatchup.teams[0] && nextMatchup.teams[1];
+    console.log('nextMatchup', nextMatchup);
+    nextMatchup.playable = !isEmpty(nextMatchup.teams[0]) && !isEmpty(nextMatchup.teams[1]);
   }
   return newBracket;
+}
+
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
 }

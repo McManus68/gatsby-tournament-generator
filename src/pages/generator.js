@@ -37,7 +37,7 @@ const BracketGeneratorPage = () => {
 
   return (
     <Theme>
-      <BracketContext.Provider value={{ bracket, setBracket, setWinner }}>
+      <BracketContext.Provider value={{ bracket, setBracket, setWinner, db: false }}>
         <Layout>
           <BracketGenerator>
             <Header>
