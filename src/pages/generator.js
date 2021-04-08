@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { generateRandomBracket, setWinner } from '../utils/bracket-utils';
 import { BracketContext } from '../context/bracket';
 import FancyButton from '../components/button/fancy';
+import { Container } from '../components/container';
 
 const BracketGenerator = styled.div`
   display: flex;
@@ -39,7 +40,7 @@ const BracketGeneratorPage = () => {
     <Theme>
       <BracketContext.Provider value={{ bracket, setBracket, setWinner, db: false }}>
         <Layout>
-          <BracketGenerator>
+          <Container>
             <Header>
               <select value={teamCount} onChange={onTeamCountChange}>
                 {[...Array(5)].map((x, i) => (
@@ -53,8 +54,8 @@ const BracketGeneratorPage = () => {
                 Simuler un tournoi
               </StyledFancyButton>
             </Header>
-            {bracket && <Bracket bracket={bracket} />}
-          </BracketGenerator>
+          </Container>
+          {bracket && <Bracket bracket={bracket} />}
         </Layout>
       </BracketContext.Provider>
     </Theme>

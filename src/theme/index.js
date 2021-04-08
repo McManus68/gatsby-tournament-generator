@@ -9,7 +9,7 @@ const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     background-color: #161414;
     color: white;
-    font-size: 1rem; 
+    font-size: 14px; 
   }
 `;
 

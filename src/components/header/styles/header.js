@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import MatButton from '@material-ui/core/Button';
 import { Link } from 'gatsby';
 
@@ -8,6 +8,7 @@ export const Header = styled.header`
   align-items: center;
   height: 80px;
   padding: 0 1rem;
+  min-width: 800px;
   background: ${(props) => props.theme.header.bg};
   box-shadow: 0px 0px 4px 3px ${(props) => props.theme.primary};
 `;

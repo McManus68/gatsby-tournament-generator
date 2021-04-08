@@ -40,7 +40,7 @@ class BracketService {
   deleteAll() {
     this.getAll().then((brackets) => {
       brackets.map((bracket) => {
-        this.delete(bracket.id);
+        return this.delete(bracket.id);
       });
     });
   }

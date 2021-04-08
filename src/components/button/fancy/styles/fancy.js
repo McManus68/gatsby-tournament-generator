@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const Vertical = styled.div``;
 export const Horizontal = styled.div``;

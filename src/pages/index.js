@@ -14,7 +14,6 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import AddTeamDialog from '../components/dialog/addTeam';
 import FancyButton from '../components/button/fancy';
-import { generateBracket } from '../utils/bracket-utils';
 import { Container } from '../components/container';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -41,7 +40,7 @@ const Title = styled.h3`
 
 const StyledFancyButton = styled(FancyButton)`
   max-width: 400px;
-  margin: 2rem auto;
+  margin: 4rem auto;
   align-items: center;
 `;
 

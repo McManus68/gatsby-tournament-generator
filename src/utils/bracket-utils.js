@@ -16,6 +16,8 @@ function getData(size) {
       return teams64;
     case 128:
       return teams128;
+    default:
+      return teams16;
   }
 }
 
